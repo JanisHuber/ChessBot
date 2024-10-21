@@ -11,6 +11,8 @@ public class Init {
     static int bishopCounter = 1;
     static HashMap<String, Integer> queenPositions = new HashMap<>();
     static int queenCounter = 1;
+    static HashMap<String, Integer> kingPositions = new HashMap<>();
+    static int kingCounter = 1;
 
     public static void Init() {
         for (int y = 0; y < 8; y++) {
@@ -45,10 +47,15 @@ public class Init {
             ChessBoard.chessBoard[7][y] = 'B';
             bishopPositions.put("7," + y, bishopCounter++);
         }
+
         ChessBoard.chessBoard[0][3] = 'Q';
+        queenPositions.put("0,3", queenCounter++);
         ChessBoard.chessBoard[7][3] = 'Q';
+        queenPositions.put("7,3", queenCounter++);
         ChessBoard.chessBoard[0][4] = 'K';
+        kingPositions.put("0,4", kingCounter++);
         ChessBoard.chessBoard[7][4] = 'K';
+        kingPositions.put("7,4", kingCounter++);
 
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
