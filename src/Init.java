@@ -72,18 +72,18 @@ public class Init {
             }
         }
 
-        printBoard();
+        printBoard(ChessBoard.chessBoard);
     }
 
-    public static void printBoard() {
-        System.out.println("  a b c d e f g h");
+    public static void printBoard(char[][] board) {
+        //System.out.println("  0 1 2 3 4 5 6 7");
         for (int x = 0; x < 8; x++) {
-            System.out.print((8 - x) + " ");
+            System.out.print(" ");
             for (int y = 0; y < 8; y++) {
-                System.out.print(ChessBoard.chessBoard[x][y] + " ");
+                System.out.print(board[x][y] + " ");
             }
-            System.out.println((8 - x));
+            System.out.println((x));
         }
-        System.out.println("  a b c d e f g h");
+        System.out.println(" 0 1 2 3 4 5 6 7");
     }
 }
