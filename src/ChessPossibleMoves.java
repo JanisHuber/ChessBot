@@ -358,178 +358,79 @@ public class ChessPossibleMoves {
         }
 
 
-    static boolean isOpponent(int y, int x, int targetY, int targetX, char piece, char targetPiece) {
-    int targetLimit = 0;
-    Integer targetPieceNum = null;
-    switch (targetPiece) {
-        case 'P':
-            targetLimit = 8;
-            targetPieceNum = Init.pawnPositions.get(targetX + "," + targetY);
-            break;
-        case 'R':
-            targetLimit = 2;
-            targetPieceNum = Init.rookPositions.get(targetX + "," + targetY);
-            break;
-        case 'N':
-            targetLimit = 2;
-            targetPieceNum = Init.knightPositions.get(targetX + "," + targetY);
-            break;
-        case 'B':
-            targetLimit = 2;
-            targetPieceNum = Init.bishopPositions.get(targetX + "," + targetY);
-            break;
-        case 'Q':
-            targetLimit = 1;
-            targetPieceNum = Init.queenPositions.get(targetX + "," + targetY);
-            break;
-        case 'K':
-            targetLimit = 1;
-            targetPieceNum = Init.kingPositions.get(targetX + "," + targetY);
-            break;
-    }
-    if (targetPieceNum == null) {
-        return false;
-    }
-
-    Integer currentPiece = null;
-    if (piece == 'P') {
-        currentPiece = Init.pawnPositions.get(x + "," + y);
-    } else if (piece == 'R') {
-        currentPiece = Init.rookPositions.get(x + "," + y);
-    } else if (piece == 'N') {
-        currentPiece = Init.knightPositions.get(x + "," + y);
-    } else if (piece == 'B') {
-        currentPiece = Init.bishopPositions.get(x + "," + y);
-    } else if (piece == 'Q') {
-        currentPiece = Init.queenPositions.get(x + "," + y);
-    } else if (piece == 'K') {
-        currentPiece = Init.kingPositions.get(x + "," + y);
-    }
-
-    if (currentPiece == null) {
-        return false;
-    }
-
-    switch(piece)
+    static boolean isOpponent(int y, int x, int targetY, int targetX, char piece, char targetPiece)
     {
-        case 'P':
-            switch(targetPiece)
-            {
-                case 'P':
-                    if (currentPiece <= 8 && targetPieceNum <= 8)
-                    {
-                        return false;
-                    }
-                    if (currentPiece > 8 && targetPieceNum > 8)
-                    {
-                        return false;
-                    }
-                    break;
-                case 'R':
-                case 'N':
-                case 'B':
-                    if (currentPiece <= 8 && targetPieceNum <= 2)
-                    {
-                        return false;
-                    }
-                    if (currentPiece > 8 && targetPieceNum > 2)
-                    {
-                        return false;
-                    }
-                    break;
-                case 'Q':
-                case 'K':
-                    if (currentPiece <= 8 && targetPieceNum <= 1)
-                    {
-                        return false;
-                    }
-                    if (currentPiece > 8 && targetPieceNum > 1)
-                    {
-                        return false;
-                    }
-                    return true;
-            }
-
-        case 'R':
-        case 'N':
-        case 'B':
-            switch(targetPiece)
-            {
-                case 'P':
-                    if (currentPiece <= 2 && targetPieceNum <= 8)
-                    {
-                        return false;
-                    }
-                    if (currentPiece > 2 && targetPieceNum > 8)
-                    {
-                        return false;
-                    }
-                    break;
-                case 'R':
-                case 'N':
-                case 'B':
-                    if (currentPiece <= 2 && targetPieceNum <= 2)
-                    {
-                        return false;
-                    }
-                    if (currentPiece > 2 && targetPieceNum > 2)
-                    {
-                        return false;
-                    }
-                    break;
-                case 'Q':
-                case 'K':
-                    if (currentPiece <= 2 && targetPieceNum <= 1)
-                    {
-                        return false;
-                    }
-                    if (currentPiece > 2 && targetPieceNum > 1)
-                    {
-                        return false;
-                    }
-                    return true;
-            }
-
-        case 'Q':
-        case 'K':
-            switch(targetPiece)
-            {
-                case 'P':
-                    if (currentPiece <= 1 && targetPieceNum <= 8)
-                    {
-                        return false;
-                    }
-                    if (currentPiece > 1 && targetPieceNum > 8)
-                    {
-                        return false;
-                    }
-                    break;
-                case 'R':
-                case 'N':
-                case 'B':
-                    if (currentPiece <= 1 && targetPieceNum <= 2)
-                    {
-                        return false;
-                    }
-                    if (currentPiece > 1 && targetPieceNum > 2)
-                    {
-                        return false;
-                    }
-                    break;
-                case 'Q':
-                case 'K':
-                    if (currentPiece <= 1 && targetPieceNum <= 1)
-                    {
-                        return false;
-                    }
-                    if (currentPiece > 1 && targetPieceNum > 1)
-                    {
-                        return false;
-                    }
-                    return true;
-            }
+        String currentColor = getColor(y, x, piece);
+        String targetColor = getColor(targetY, targetX, targetPiece);
+        return !currentColor.equals(targetColor);
     }
-    return true;
-}
+
+    static String getColor(int y, int x, char piece)
+    {
+        switch(piece)
+        {
+            case 'P':
+                int currentPieceId = Init.pawnPositions.get(y + "," + x);
+                if (currentPieceId >= 8)
+                {
+                    return "black";
+                }
+                else
+                {
+                    return "white";
+                }
+            case 'N':
+                int currentKnightId = Init.knightPositions.get(y + "," + x);
+                if (currentKnightId >= 2)
+                {
+                    return "black";
+                }
+                else
+                {
+                    return "white";
+                }
+            case 'B':
+                int currentBishopId = Init.bishopPositions.get(y + "," + x);
+                if (currentBishopId >= 2)
+                {
+                    return "black";
+                }
+                else
+                {
+                    return "white";
+                }
+            case 'R':
+                int currentRookId = Init.rookPositions.get(y + "," + x);
+                if (currentRookId >= 2)
+                {
+                    return "black";
+                }
+                else
+                {
+                    return "white";
+                }
+            case 'Q':
+                int currentQueenId = Init.queenPositions.get(y + "," + x);
+                if (currentQueenId >= 1)
+                {
+                    return "black";
+                }
+                else
+                {
+                    return "white";
+                }
+            case 'K':
+                int currentKingId = Init.kingPositions.get(y + "," + x);
+                if (currentKingId >= 1)
+                {
+                    return "black";
+                }
+                else
+                {
+                    return "white";
+                }
+        }
+    return "idError";
+    }
 }
 

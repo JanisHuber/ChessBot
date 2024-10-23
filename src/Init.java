@@ -77,12 +77,12 @@ public class Init {
 
     public static void printBoard(char[][] board) {
         //System.out.println("  0 1 2 3 4 5 6 7");
-        for (int x = 0; x < 8; x++) {
+        for (int y = 0; y < 8; y++) {
             System.out.print(" ");
-            for (int y = 0; y < 8; y++) {
-                System.out.print(board[x][y] + " ");
+            for (int x = 0; x < 8; x++) {
+                System.out.print(board[y][x] + " ");
             }
-            System.out.println((x));
+            System.out.println((y));
         }
         System.out.println(" 0 1 2 3 4 5 6 7");
     }

@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -5,8 +6,8 @@ public class ChessMain {
     public static void main(String[] args) {
         Init.Init();
         Scanner scanner = new Scanner(System.in);
-        boolean play = true;
-        while (play) {
+        boolean test = true;
+        while (test) {
             System.out.println("Wähle eine Figur (piece, y, x): ");
             char piece = scanner.next().charAt(0);
             int y = scanner.nextInt();
@@ -22,15 +23,33 @@ public class ChessMain {
                     tempChessBoard[move[0]][move[1]] = 'M';
                 }
                 if (situation == 1) {
+                    tempChessBoard[move[0]][move[1]] = '-';
                     tempChessBoard[move[0]][move[1]] = 'X';
+                }
+                if (situation == 2)
+                {
+                    tempChessBoard[move[0]][move[1]] = '#';
                 }
             }
             Init.printBoard(tempChessBoard);
             System.out.println("Wähle ein Feld (y, x): ");
             int nextY = scanner.nextInt();
             int nextX = scanner.nextInt();
-            int situation = 0; // Fix This
-            MakeMove.MakeMove(y, x, nextY, nextX, piece, situation);
+            boolean validMove = false;
+            for (int[] move : moves) {
+                if (nextY == move[0] && nextX == move[1]) {
+                    int situation = 0;
+                    if (tempChessBoard[nextY][nextX] == 'X') {
+                        situation = 1;
+                    }
+                    MakeMove.MakeMove(y, x, nextY, nextX, piece, situation);
+                    validMove = true;
+                    break;
+                }
+            }
+            if (!validMove) {
+                System.out.println("Ungültiger Zug!");
+            }
         }
         scanner.close();
     }
