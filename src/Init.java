@@ -1,12 +1,5 @@
 import java.util.HashMap;
 
-//P White= 1-8 Black = 9-16
-//R White= 1-2 Black = 3-4
-//N White= 1-2 Black = 3-4
-//B White= 1-2 Black = 3-4
-//Q White= 1 Black = 2
-//K White= 1 Black = 2
-
 public class Init {
     static HashMap<String, Integer> pawnPositions = new HashMap<>();
     static int pawnCounter = 1;
@@ -30,11 +23,11 @@ public class Init {
             ChessBoard.chessBoard[6][y] = 'P';
             pawnPositions.put("6," + y, pawnCounter++);
         }
-        for (int y = 0; y < 8; y++) {
+        for (int y = 0; y < 8; y += 7) {
             ChessBoard.chessBoard[0][y] = 'R';
             rookPositions.put("0," + y, rookCounter++);
         }
-        for (int y = 0; y < 8; y++) {
+        for (int y = 0; y < 8; y += 7) {
             ChessBoard.chessBoard[7][y] = 'R';
             rookPositions.put("7," + y, rookCounter++);
         }

@@ -57,7 +57,8 @@ public class MakeMove {
         }
         ChessBoard.chessBoard[nextY][nextX] = piece;
         ChessBoard.chessBoard[y][x] = '-';
-        System.out.println("Aktuelle Pawn-Positionen: " + Init.pawnPositions);
         Init.printBoard(ChessBoard.chessBoard);
+
+
     }
 }
