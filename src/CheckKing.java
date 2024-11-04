@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+
 public class CheckKing {
     public static boolean isInCheck(int kingY, int kingX) {
         char[][] chessBoard = ChessBoard.chessBoard;
@@ -46,6 +47,38 @@ public class CheckKing {
                 }
             }
         }
+        if (canBlockOrCapture(kingY, kingX)) {
+            return false;
+        }
         return true;
+    }
+
+    public static boolean canBlockOrCapture(int kingY, int kingX) {
+        char[][] chessBoard = ChessBoard.chessBoard;
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
+                char piece = chessBoard[y][x];
+                if (piece == '-' || piece == 'K') continue;
+                ArrayList<int[]> moves = ChessPossibleMoves.Moves(piece, y, x);
+                for (int[] move : moves) {
+                    if (ChessPossibleMoves.isOpponent(kingY, kingX, move[0], move[1], 'K', piece)) {
+                        continue;
+                    }
+                    char original = chessBoard[move[0]][move[1]];
+                    chessBoard[move[0]][move[1]] = piece;
+                    chessBoard[y][x] = '-';
+                    boolean inCheck = isInCheck(kingY, kingX);
+                    chessBoard[move[0]][move[1]] = original;
+                    chessBoard[y][x] = piece;
+                    System.out.println(piece);
+                    System.out.println(move[0] + " " + move[1]);
+                    if (!inCheck) {
+                        System.out.println("TRUE");
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 }
