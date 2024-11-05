@@ -356,35 +356,66 @@ public class ChessPossibleMoves {
                     {
                         if (y + 1 < 8 && chessBoard[y + 1][x] == '-')
                         {
-                            possibleMoves.add(new int[]{y + 1, x});
+                            possibleMoves.add(new int[]{y + 1, x, 0});
+                        } else if (y + 1 < 8 && chessBoard[y + 1][x] != '-' && chessBoard[y + 1][x] != 'K' && isOpponent(y, x, y + 1, x, piece, chessBoard[y + 1][x]))
+                        {
+                            possibleMoves.add(new int[]{y + 1, x, 1});
                         }
+
                         if (y - 1 >= 0 && chessBoard[y - 1][x] == '-')
                         {
-                            possibleMoves.add(new int[]{y - 1, x});
+                            possibleMoves.add(new int[]{y - 1, x, 0});
+                        } else if (y - 1 >= 0 && chessBoard[y - 1][x] != '-' && chessBoard[y - 1][x] != 'K' && isOpponent(y, x, y - 1, x, piece, chessBoard[y - 1][x]))
+                        {
+                            possibleMoves.add(new int[]{y - 1, x, 1});
                         }
+
                         if (x + 1 < 8 && chessBoard[y][x + 1] == '-')
                         {
-                            possibleMoves.add(new int[]{y, x + 1});
+                            possibleMoves.add(new int[]{y, x + 1, 0});
+                        }else if (x + 1 < 8 && chessBoard[y][x + 1] != '-' && chessBoard[y][x + 1] != 'K' && isOpponent(y, x, y, x + 1, piece, chessBoard[y][x + 1]))
+                        {
+                            possibleMoves.add(new int[]{y, x + 1, 1});
                         }
+
                         if (x - 1 >= 0 && chessBoard[y][x - 1] == '-')
                         {
-                            possibleMoves.add(new int[]{y, x - 1});
+                            possibleMoves.add(new int[]{y, x - 1, 0});
+                        } else if (x - 1 >= 0 && chessBoard[y][x - 1] != '-' && chessBoard[y][x - 1] != 'K' && isOpponent(y, x, y, x - 1, piece, chessBoard[y][x - 1]))
+                        {
+                            possibleMoves.add(new int[]{y, x - 1, 1});
                         }
+
                         if (y + 1 < 8 && x + 1 < 8 && chessBoard[y + 1][x + 1] == '-')
                         {
-                            possibleMoves.add(new int[]{y + 1, x + 1});
+                            possibleMoves.add(new int[]{y + 1, x + 1, 0});
+                        } else if (y + 1 < 8 && x + 1 < 8 && chessBoard[y + 1][x + 1] != '-' && chessBoard[y + 1][x + 1] != 'K' && isOpponent(y, x, y + 1, x + 1, piece, chessBoard[y + 1][x + 1]))
+                        {
+                            possibleMoves.add(new int[]{y + 1, x + 1, 1});
                         }
+
                         if (y + 1 < 8 && x - 1 >= 0 && chessBoard[y + 1][x - 1] == '-')
                         {
-                            possibleMoves.add(new int[]{y + 1, x - 1});
+                            possibleMoves.add(new int[]{y + 1, x - 1, 0});
+                        } else if (y + 1 < 8 && x - 1 >= 0 && chessBoard[y + 1][x - 1] != '-' && chessBoard[y + 1][x - 1] != 'K' && isOpponent(y, x, y + 1, x - 1, piece, chessBoard[y + 1][x - 1]))
+                        {
+                            possibleMoves.add(new int[]{y + 1, x - 1, 1});
                         }
+
                         if (y - 1 >= 0 && x + 1 < 8 && chessBoard[y - 1][x + 1] == '-')
                         {
-                            possibleMoves.add(new int[]{y - 1, x + 1});
+                            possibleMoves.add(new int[]{y - 1, x + 1, 0});
+                        } else if (y - 1 >= 0 && x + 1 < 8 && chessBoard[y - 1][x + 1] != '-' && chessBoard[y - 1][x + 1] != 'K' && isOpponent(y, x, y - 1, x + 1, piece, chessBoard[y - 1][x + 1]))
+                        {
+                            possibleMoves.add(new int[]{y - 1, x + 1, 1});
                         }
+
                         if (y - 1 >= 0 && x - 1 >= 0 && chessBoard[y - 1][x - 1] == '-')
                         {
-                            possibleMoves.add(new int[]{y - 1, x - 1});
+                            possibleMoves.add(new int[]{y - 1, x - 1, 0});
+                        } else if (y - 1 >= 0 && x - 1 >= 0 && chessBoard[y - 1][x - 1] != '-' && chessBoard[y - 1][x - 1] != 'K' && isOpponent(y, x, y - 1, x - 1, piece, chessBoard[y - 1][x - 1]))
+                        {
+                            possibleMoves.add(new int[]{y - 1, x - 1, 1});
                         }
                     }
                 break;

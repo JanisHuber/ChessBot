@@ -30,23 +30,29 @@ public class CheckKing {
         char[][] chessBoard = ChessBoard.chessBoard;
         int[] directions = {-1, 0, 1};
 
+        // Überprüfen, ob der König sich aus dem Schach bewegen kann
         for (int dy : directions) {
             for (int dx : directions) {
                 if (dy == 0 && dx == 0) continue;
                 int newY = kingY + dy;
                 int newX = kingX + dx;
-                if (newY >= 0 && newY < 8 && newX >= 0 && newX < 8 && chessBoard[newY][newX] == '-') {
-                    chessBoard[kingY][kingX] = '-';
-                    chessBoard[newY][newX] = 'K';
-                    boolean inCheck = isInCheck(newY, newX);
-                    chessBoard[newY][newX] = '-';
-                    chessBoard[kingY][kingX] = 'K';
-                    if (!inCheck) {
-                        return false;
+                if (newY >= 0 && newY < 8 && newX >= 0 && newX < 8) {
+                    char targetPiece = chessBoard[newY][newX];
+                    if (targetPiece == '-' || ChessPossibleMoves.isOpponent(kingY, kingX, newY, newX, 'K', targetPiece)) {
+                        char original = chessBoard[newY][newX];
+                        chessBoard[kingY][kingX] = '-';
+                        chessBoard[newY][newX] = 'K';
+                        boolean inCheck = isInCheck(newY, newX);
+                        chessBoard[newY][newX] = original;
+                        chessBoard[kingY][kingX] = 'K';
+                        if (!inCheck) {
+                            return false;
+                        }
                     }
                 }
             }
         }
+
         if (canBlockOrCapture(kingY, kingX)) {
             return false;
         }
@@ -58,7 +64,7 @@ public class CheckKing {
         for (int y = 0; y < 8; y++) {
             for (int x = 0; x < 8; x++) {
                 char piece = chessBoard[y][x];
-                if (piece == '-' || piece == 'K') continue;
+                if (piece == '-') continue;
                 ArrayList<int[]> moves = ChessPossibleMoves.Moves(piece, y, x);
                 for (int[] move : moves) {
                     if (ChessPossibleMoves.isOpponent(kingY, kingX, move[0], move[1], 'K', piece)) {
@@ -67,6 +73,10 @@ public class CheckKing {
                     char original = chessBoard[move[0]][move[1]];
                     chessBoard[move[0]][move[1]] = piece;
                     chessBoard[y][x] = '-';
+                    if (piece == 'K') {
+                        kingY = move[0];
+                        kingX = move[1];
+                    }
                     boolean inCheck = isInCheck(kingY, kingX);
                     chessBoard[move[0]][move[1]] = original;
                     chessBoard[y][x] = piece;
