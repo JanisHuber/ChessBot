@@ -9,6 +9,20 @@ public class ChessMainTest {
         boolean gameRunning = true;
         boolean isPlayer = false;
     }
+
+    @Test
+    public void Bot(){
+        setUp();
+        for (int i = 0; i < 5; i++){
+            getBotMove.tryMoves(5);
+            Init.printBoard(ChessBoard.chessBoard);
+            Move bestMoveWhite = getBotMove.getBestMove("white");
+            MakeMove.MakeMove(bestMoveWhite.startY, bestMoveWhite.startX, bestMoveWhite.endY, bestMoveWhite.endX, ChessBoard.chessBoard[bestMoveWhite.startY][bestMoveWhite.startX], 0);
+            Init.printBoard(ChessBoard.chessBoard);
+            assertTrue(evalBoard.evalBoard(ChessBoard.chessBoard) > 0, "Der Bot sollte nicht verlieren");
+        }
+    }
+
     @Test
     public void mate() {
         setUp();

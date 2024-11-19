@@ -440,9 +440,9 @@ public class ChessPossibleMoves {
             Integer currentPieceId = Init.pawnPositions.get(y + "," + x);
             if (currentPieceId != null) {
                 if (currentPieceId > 8) {
-                    return "black";
-                } else {
                     return "white";
+                } else {
+                    return "black";
                 }
             }
             break;
@@ -450,9 +450,9 @@ public class ChessPossibleMoves {
             Integer currentKnightId = Init.knightPositions.get(y + "," + x);
             if (currentKnightId != null) {
                 if (currentKnightId > 2) {
-                    return "black";
-                } else {
                     return "white";
+                } else {
+                    return "black";
                 }
             }
             break;
@@ -460,9 +460,9 @@ public class ChessPossibleMoves {
             Integer currentBishopId = Init.bishopPositions.get(y + "," + x);
             if (currentBishopId != null) {
                 if (currentBishopId > 2) {
-                    return "black";
-                } else {
                     return "white";
+                } else {
+                    return "black";
                 }
             }
             break;
@@ -470,9 +470,9 @@ public class ChessPossibleMoves {
             Integer currentRookId = Init.rookPositions.get(y + "," + x);
             if (currentRookId != null) {
                 if (currentRookId > 2) {
-                    return "black";
-                } else {
                     return "white";
+                } else {
+                    return "black";
                 }
             }
             break;
@@ -480,9 +480,9 @@ public class ChessPossibleMoves {
             Integer currentQueenId = Init.queenPositions.get(y + "," + x);
             if (currentQueenId != null) {
                 if (currentQueenId > 1) {
-                    return "black";
-                } else {
                     return "white";
+                } else {
+                    return "black";
                 }
             }
             break;
@@ -490,9 +490,9 @@ public class ChessPossibleMoves {
             Integer currentKingId = Init.kingPositions.get(y + "," + x);
             if (currentKingId != null) {
                 if (currentKingId > 1) {
-                    return "black";
-                } else {
                     return "white";
+                } else {
+                    return "black";
                 }
             }
             break;
@@ -500,4 +500,3 @@ public class ChessPossibleMoves {
     return "idError";
 }
 }
-

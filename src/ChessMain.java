@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ChessMain {
@@ -9,17 +8,19 @@ public class ChessMain {
         Init.Init();
         Scanner scanner = new Scanner(System.in);
         boolean gameRunning = true;
-        boolean isPlayer = false;
-
+        boolean isPlayer = true;
         while (gameRunning) {
-            printBoard();
-            char piece;
+           char piece;
+           getBotMove.tryMoves(5);
+           if (isInCheck(true)) {
+               System.out.println("King is under Check!");
+           }
             if (isPlayer) {
                 System.out.println("Player Move");
                 if (isInCheck(true))
                 {
                     System.out.println("King is under Check!");
-                    piece = 'K';
+                    piece = 'K'; //Get Moves to avoid check not sure for 'K'
                     ChessMain chessMain = new ChessMain();
                     System.out.println(chessMain.i + " " + chessMain.j);
                     playerMove.getPlayerMove(piece, chessMain.i, chessMain.j, true, true);
@@ -31,33 +32,6 @@ public class ChessMain {
                     int x = scanner.nextInt();
 
                     byte gameRunningByte = playerMove.getPlayerMove(piece, y, x, false, true);
-                    if (gameRunningByte == 2) {
-                        isPlayer = true;
-                        continue;
-                    } else if (gameRunningByte == 1) {
-                        System.out.println("Checkmate!");
-                        gameRunning = false;
-                    }
-                    else {
-                        //isPlayer = false;
-                    }
-                }
-            } else { //getBotMove
-                System.out.println("Bot Move");
-                if (isInCheck(false))
-                {
-                    ChessMain chessMain = new ChessMain();
-                    System.out.println(chessMain.i + " " + chessMain.j);
-                    piece = 'K';
-                    playerMove.getPlayerMove(piece, chessMain.i, chessMain.j, true, false);
-                }
-                else { //PlayerMove
-                    System.out.println("Choose a piece (piece, y, x): ");
-                    piece = scanner.next().charAt(0);
-                    int y = scanner.nextInt();
-                    int x = scanner.nextInt();
-
-                    byte gameRunningByte = playerMove.getPlayerMove(piece, y, x, false, false);
                     if (gameRunningByte == 2) {
                         isPlayer = true;
                         continue;
