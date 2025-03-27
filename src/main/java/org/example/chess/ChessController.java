@@ -147,6 +147,7 @@ public class ChessController implements Serializable {
             }
             if (capturesBool.isEmpty() && blocksBool.isEmpty() && escapesBool.isEmpty()) { // Hope lost - Checkmate
                 System.out.println("Checkmate");
+                return null;
             }
         }
 
@@ -324,7 +325,7 @@ public class ChessController implements Serializable {
         Initialize();
     }
 
-    public void Initialize() {
+    private void Initialize() {
         chessBoard = new ChessBoard();
         List<Field> fields = new ArrayList<>();
 
@@ -579,18 +580,21 @@ public class ChessController implements Serializable {
             }
         }
         possibleEscapes = kingField.figure.getPossibleMoves();
-        for (Field field : possibleEscapes) {   //figureField --> field       //field --> kingField
+        for (Field field : possibleEscapes) {
             isOutOfCheck = false;
-            ChessFigure originalFigure = field.figure;
-            field.figure = kingField.figure;
-            kingField.figure.position = field;
-            isOutOfCheck = isCheckmate(null) == 0;
+            ChessFigure king = kingField.figure;
+            ChessFigure captured = field.figure;
 
+            field.figure = king;
             kingField.figure = null;
-            kingField.figure = field.figure;
+            king.position = field;
 
-            field.figure = originalFigure;
-            kingField.figure.position = kingField;
+            isOutOfCheck = isCheckmate(field) == 0;
+
+            king.position = kingField;
+            kingField.figure = king;
+            field.figure = captured;
+
             if (isOutOfCheck) {
                 escapes.add(field);
             }

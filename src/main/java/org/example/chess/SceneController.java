@@ -116,7 +116,6 @@ public class SceneController {
 
                 imageView.setLayoutX(column * 50);
                 imageView.setLayoutY(row * 50);
-
                 if ((row + column) % 2 == 0) {
                     imageView.setImage(new Image(getClass().getResource("/images/beige_tile.png").toExternalForm()));
                 } else {

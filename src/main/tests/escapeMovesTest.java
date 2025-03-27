@@ -19,7 +19,7 @@ public class escapeMovesTest {
         //start Javafx-Thread
         Platform.startup(() -> {
             try {
-                ChessController chessController = new ChessController();
+                ChessController chessController = new ChessController(false);
                 chessController.newGame();
 
                 Field f = chessController.chessBoard.getField("E", 2);

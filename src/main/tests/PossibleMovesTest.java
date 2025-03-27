@@ -23,7 +23,7 @@ public class PossibleMovesTest {
         //start Javafx-Thread
         Platform.startup(() -> {
             try {
-                ChessController chessController = new ChessController();
+                ChessController chessController = new ChessController(false);
 
                 Field f = chessController.chessBoard.getField("D", 4);
                 f.setFigure(new Queen());
