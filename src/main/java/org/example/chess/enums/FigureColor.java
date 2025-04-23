@@ -1,4 +1,4 @@
-package org.example.chess;
+package org.example.chess.enums;
 
 public enum FigureColor {
     WHITE,

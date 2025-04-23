@@ -1,5 +1,8 @@
-package org.example.chess;
+package org.example.chess.evaluate;
 
+import org.example.chess.board.Field;
+import org.example.chess.controller.ChessController;
+import org.example.chess.enums.FigureColor;
 import org.example.chess.figures.Pawn;
 
 import java.util.List;

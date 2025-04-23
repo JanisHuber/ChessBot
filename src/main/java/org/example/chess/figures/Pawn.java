@@ -1,8 +1,8 @@
 package org.example.chess.figures;
 
-import org.example.chess.ChessFigure;
-import org.example.chess.Field;
-import org.example.chess.FigureColor;
+import org.example.chess.util.ChessFigure;
+import org.example.chess.board.Field;
+import org.example.chess.enums.FigureColor;
 
 import java.io.Serializable;
 import java.util.ArrayList;

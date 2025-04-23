@@ -1,4 +1,4 @@
-package org.example.chess;
+package org.example.chess.board;
 
 import java.io.Serializable;
 import java.util.List;
@@ -26,28 +26,20 @@ public class ChessBoard implements Serializable {
     }
 
     public void MoveFigure(Field source, Field target) {
-        //System.out.println("Attempting to move figure from source: " + source.row + source.column + " to target: " + target.row + target.column);
-
         if (source.figure == null) {
-            //System.out.println("Error: source.figure is null. Cannot move.");
             return;
         }
 
         if (target.figure != null && target.figure.figureColor != source.figure.figureColor) {
-            //System.out.println("Target figure will be captured: " + target.figure);
             target.figure.position = null;
             target.figure = null;
-            //System.out.println("target should be captured");
         } else if (target.figure != null && target.figure.figureColor == source.figure.figureColor) {
-            //System.out.println("Error: target.figure is the same color as source.figure. Cannot move.");
             return;
         }
 
         source.figure.position = target;
         target.figure = source.figure;
         source.figure = null;
-
-        System.out.println("Move completed successfully." + this);
     }
 
 }

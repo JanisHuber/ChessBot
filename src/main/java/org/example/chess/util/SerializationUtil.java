@@ -1,16 +1,14 @@
-package org.example.chess;
+package org.example.chess.util;
 
 import java.io.*;
 
 public class SerializationUtil {
     public static <T extends Serializable> T deepClone(T object) {
         try {
-            // Serialisieren (Objekt in Byte-Array umwandeln)
             ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
             ObjectOutputStream out = new ObjectOutputStream(byteOut);
             out.writeObject(object);
 
-            // Deserialisieren (Byte-Array in Objekt umwandeln)
             ByteArrayInputStream byteIn = new ByteArrayInputStream(byteOut.toByteArray());
             ObjectInputStream in = new ObjectInputStream(byteIn);
 

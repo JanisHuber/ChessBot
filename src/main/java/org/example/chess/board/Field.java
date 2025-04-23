@@ -1,7 +1,7 @@
-package org.example.chess;
+package org.example.chess.board;
 import java.io.Serializable;
 
-import org.example.chess.figures.*;
+import org.example.chess.util.ChessFigure;
 
 public class Field implements Serializable {
     private static final long serialVersionUID = 1L;

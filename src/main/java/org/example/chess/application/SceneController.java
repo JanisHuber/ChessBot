@@ -1,4 +1,4 @@
-package org.example.chess;
+package org.example.chess.application;
 
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -8,6 +8,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
+import org.example.chess.controller.ChessController;
+import org.example.chess.board.Field;
 
 import java.util.List;
 
@@ -58,7 +60,6 @@ public class SceneController {
                 imageView.addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                        //System.out.println(field.row + field.column + " wurde ausgewählt");
                         List<Field> possibleMoves = chessController.getCheckedMove(field.figure);
                         if (possibleMoves != null) {
                             updateChessBoard(possibleMoves);
@@ -70,7 +71,6 @@ public class SceneController {
                     @Override
                     public void handle(MouseEvent event) {
                         boolean hasMoved = false;
-                        //System.out.println(field.row + field.column + " wurde losgelassen");
                         updateChessBoard(null);
                         double x = (event.getSceneX() / 50);
                         double y = (event.getSceneY() / 50);
@@ -93,14 +93,8 @@ public class SceneController {
                     }
                 });
 
-                if ((row + column) % 2 == 0) {
-                    if (field.figure != null) {
-                        imageView.setImage(field.figure.image);
-                    }
-                } else {
-                    if (field.figure != null) {
-                        imageView.setImage(field.figure.image);
-                    }
+                if (field.figure != null) {
+                    imageView.setImage(field.figure.image);
                 }
                 anchorPane.getChildren().add(imageView);
             }

@@ -1,6 +1,9 @@
-package org.example.chess;
+package org.example.chess.util;
 
 import javafx.scene.image.Image;
+import org.example.chess.board.ChessBoard;
+import org.example.chess.board.Field;
+import org.example.chess.enums.FigureColor;
 
 import java.io.Serializable;
 import java.util.List;

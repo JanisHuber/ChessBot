@@ -1,4 +1,7 @@
-package org.example.chess;
+package org.example.chess.util;
+
+import org.example.chess.board.ChessBoard;
+import org.example.chess.board.Field;
 
 public class Move {
     private final Field source;
