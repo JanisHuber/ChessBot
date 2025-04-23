@@ -1,11 +1,10 @@
 import javafx.application.Platform;
-import org.example.chess.ChessController;
-import org.example.chess.Field;
-import org.example.chess.FigureColor;
-import org.example.chess.Move;
-import org.example.chess.figures.King;
-import org.example.chess.figures.Queen;
-import org.example.chess.figures.Rook;
+
+import org.example.chess.backend.board.Field;
+import org.example.chess.backend.controller.ChessController;
+import org.example.chess.backend.enums.FigureColor;
+import org.example.chess.backend.figures.King;
+import org.example.chess.backend.figures.Rook;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CountDownLatch;
@@ -21,7 +20,6 @@ public class EscapeCheckBugTest {
         Platform.startup(() -> {
             try {
                 ChessController chessController = new ChessController(false);
-                chessController.newGame();
                 clearField(chessController);
 
                 Field f = chessController.chessBoard.getField("E", 2);

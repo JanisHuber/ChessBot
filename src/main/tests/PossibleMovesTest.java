@@ -1,12 +1,11 @@
 import javafx.application.Platform;
-import org.example.chess.ChessBoard;
-import org.example.chess.ChessController;
-import org.example.chess.Field;
-import org.example.chess.FigureColor;
-import org.example.chess.figures.Bishop;
-import org.example.chess.figures.Pawn;
-import org.example.chess.figures.Queen;
-import org.example.chess.figures.Rook;
+
+import org.example.chess.backend.board.Field;
+import org.example.chess.backend.controller.ChessController;
+import org.example.chess.backend.enums.FigureColor;
+import org.example.chess.backend.figures.Bishop;
+import org.example.chess.backend.figures.Queen;
+import org.example.chess.backend.figures.Rook;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

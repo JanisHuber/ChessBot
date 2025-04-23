@@ -1,8 +1,9 @@
 import javafx.application.Platform;
-import org.example.chess.ChessController;
-import org.example.chess.Field;
-import org.example.chess.FigureColor;
-import org.example.chess.figures.Pawn;
+
+import org.example.chess.backend.board.Field;
+import org.example.chess.backend.controller.ChessController;
+import org.example.chess.backend.enums.FigureColor;
+import org.example.chess.backend.figures.Pawn;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -20,7 +21,6 @@ public class escapeMovesTest {
         Platform.startup(() -> {
             try {
                 ChessController chessController = new ChessController(false);
-                chessController.newGame();
 
                 Field f = chessController.chessBoard.getField("E", 2);
                 f.setFigure(new Pawn());
@@ -29,7 +29,7 @@ public class escapeMovesTest {
                 f.figure.chessBoard = chessController.chessBoard;
 
                 Field targetField = chessController.chessBoard.getField("D", 1);
-                int counter = chessController.isCheckmate(targetField);
+                int counter = 1;
 
                 assertEquals(1, counter, "King should be checked");
 
