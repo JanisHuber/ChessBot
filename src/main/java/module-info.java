@@ -2,6 +2,7 @@ module org.example.chess {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.desktop;
+    requires java.logging;
 
     exports org.example.chess.backend.figures; //custom export JUnit-Tests
 

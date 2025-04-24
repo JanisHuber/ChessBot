@@ -2,6 +2,7 @@ package org.example.chess.backend.bot;
 
 import org.example.chess.backend.board.ChessBoard;
 import org.example.chess.backend.board.Field;
+import org.example.chess.backend.util.LoggingToFile;
 import org.example.chess.backend.util.Move;
 import org.example.chess.backend.controller.ChessController;
 import org.example.chess.backend.enums.FigureColor;
@@ -10,12 +11,16 @@ import org.example.chess.backend.util.SerializationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class ChessBot {
     private final int depth;
+    private final int maxQuiescenceSearchDepth;
+    private final Logger logger = LoggingToFile.getLogger(ChessBot.class.getName());
 
     public ChessBot(int depth) {
         this.depth = depth;
+        this.maxQuiescenceSearchDepth = depth;
     }
 
     public Move getBestMove(ChessController controller) {
@@ -25,6 +30,7 @@ public class ChessBot {
         List<Move> possibleMoves = sortMoves(getPossibleMoves(controller), controller.chessBoard);
 
         for (Move move : possibleMoves) {
+            logger.info("Evaluating move: " + move.getSource(controller.chessBoard).row + "," + move.getSource(controller.chessBoard).column + " to " + move.getTarget(controller.chessBoard).row + "," + move.getTarget(controller.chessBoard).column);
             int eval = evaluateMove(controller, move);
             if (eval > maxEval) {
                 maxEval = eval;
@@ -49,15 +55,14 @@ public class ChessBot {
     }
 
     private int alphaBeta(ChessController controller, int depth, int alpha, int beta, boolean isMaximizingPlayer) {
-        System.out.println("alphaBeta called with depth: " + depth);
         if (depth == 0) {
-            return evaluateBoard.evaluateBoard(controller);
+            return evaluateBoard.evaluateBoard(controller, logger);
+            //return quiescenceSearch(controller, alpha, beta, isMaximizingPlayer, maxQuiescenceSearchDepth);
         }
 
         List<Move> possibleMoves = sortMoves(getPossibleMoves(controller), controller.chessBoard);
-        System.out.println("Possible moves: " + possibleMoves.size() + "At depth: " + depth);
         if (possibleMoves.isEmpty()) {
-            return evaluateBoard.evaluateBoard(controller);
+            return evaluateBoard.evaluateBoard(controller, logger);
         }
 
         if (isMaximizingPlayer) {
@@ -71,6 +76,7 @@ public class ChessBot {
         int minEval = Integer.MAX_VALUE;
 
         for (Move move : possibleMoves) {
+            logger.info("Evaluating subMove: " + move.getSource(controller.chessBoard).row + "," + move.getSource(controller.chessBoard).column + " to " + move.getTarget(controller.chessBoard).row + "," + move.getTarget(controller.chessBoard).column);
             ChessController clonedController = SerializationUtil.deepClone(controller);
             clonedController.chessBoard.MoveFigure(move.getSource(clonedController.chessBoard), move.getTarget(clonedController.chessBoard));
             clonedController.currentTurn = FigureColor.WHITE;
@@ -90,6 +96,7 @@ public class ChessBot {
         int maxEval = Integer.MIN_VALUE;
 
         for (Move move : possibleMoves) {
+            logger.info("Evaluating subMove: " + move.getSource(controller.chessBoard).row + "," + move.getSource(controller.chessBoard).column + " to " + move.getTarget(controller.chessBoard).row + "," + move.getTarget(controller.chessBoard).column);
             ChessController clonedController = SerializationUtil.deepClone(controller);
             clonedController.chessBoard.MoveFigure(move.getSource(clonedController.chessBoard), move.getTarget(clonedController.chessBoard));
             clonedController.currentTurn = FigureColor.BLACK;
@@ -131,5 +138,75 @@ public class ChessBot {
 
         sortedMoves.addAll(remainingMoves);
         return sortedMoves;
+    }
+
+    /**
+     * Quiescence search to avoid the horizon effect
+     * <p>Expands depth until a move is quite</p>
+     * @param controller
+     * @param alpha
+     * @param beta
+     * @param isMaximizingPlayer
+     * @return score of the best evaluation
+     */
+    private int quiescenceSearch(ChessController controller, int alpha, int beta, boolean isMaximizingPlayer, int depth) {
+        System.out.println("Quiescence search depth: " + depth);
+        if (depth == 0) {
+            return evaluateBoard.evaluateBoard(controller, logger);
+        }
+        int standPat = evaluateBoard.evaluateBoard(controller, logger);
+
+        if (isMaximizingPlayer) {
+            if (standPat >= beta) return beta;
+            alpha = Math.max(alpha, standPat);
+        } else {
+            if (standPat <= alpha) return alpha;
+            beta = Math.min(beta, standPat);
+        }
+
+        List<Move> noisyMoves = getNoisyMoves(controller);
+
+        for (Move move : noisyMoves) {
+            ChessController cloned = SerializationUtil.deepClone(controller);
+            cloned.chessBoard.MoveFigure(move.getSource(cloned.chessBoard), move.getTarget(cloned.chessBoard));
+            cloned.currentTurn = isMaximizingPlayer ? FigureColor.BLACK : FigureColor.WHITE;
+
+            int score = quiescenceSearch(cloned, alpha, beta, !isMaximizingPlayer, depth - 1);
+
+            if (isMaximizingPlayer) {
+                if (score >= beta) return beta;
+                alpha = Math.max(alpha, score);
+            } else {
+                if (score <= alpha) return alpha;
+                beta = Math.min(beta, score);
+            }
+        }
+        return isMaximizingPlayer ? alpha : beta;
+    }
+
+
+    private List<Move> getNoisyMoves(ChessController controller) {
+        List<Move> allMoves = getPossibleMoves(controller);
+        List<Move> noisyMoves = new ArrayList<>();
+
+        for (Move move : allMoves) {
+            Field target = move.getTarget(controller.chessBoard);
+            if (target.figure != null && target.figure.figureColor != controller.currentTurn) {
+                noisyMoves.add(move);
+            } else if (moveResultsInCheck(controller, move)) {
+                noisyMoves.add(move);
+            }
+        }
+        return noisyMoves;
+    }
+
+    private boolean moveResultsInCheck(ChessController controller, Move move) {
+        ChessController clonedController = SerializationUtil.deepClone(controller);
+        clonedController.chessBoard.MoveFigure(move.getSource(clonedController.chessBoard), move.getTarget(clonedController.chessBoard));
+        clonedController.currentTurn = (controller.currentTurn == FigureColor.WHITE)
+                ? FigureColor.BLACK
+                : FigureColor.WHITE;
+
+        return clonedController.getCheckMoveHandler().checkmateHandler.isMate(null) > 0;
     }
 }

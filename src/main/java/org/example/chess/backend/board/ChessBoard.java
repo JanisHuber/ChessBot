@@ -6,7 +6,7 @@ import java.util.List;
 public class ChessBoard implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    public List<Field> Fields;
+    private List<Field> Fields;
 
     public List<Field> getFields() {
         return Fields;

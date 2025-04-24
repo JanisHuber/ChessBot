@@ -5,10 +5,13 @@ import org.example.chess.backend.util.ChessFigure;
 import org.example.chess.backend.board.Field;
 import org.example.chess.backend.enums.FigureColor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CheckmateHandler {
+public class CheckmateHandler implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private final ChessBoard chessBoard;
     private final FigureColor currentTurn;
 
@@ -28,10 +31,10 @@ public class CheckmateHandler {
         return possibleBlockSources;
     }
 
-    public List<Field> getPossiblesMates(Field kingField) {
+    private List<Field> getPossiblesMates(Field kingField) {
         List<Field> possibleMates = new ArrayList<>();
         List<Field> currentCheckingFields = new ArrayList<>();
-        for (Field field : chessBoard.Fields) {
+        for (Field field : chessBoard.getFields()) {
             if (field.figure == null) {
                 continue;
             }
@@ -55,9 +58,14 @@ public class CheckmateHandler {
         return possibleMates;
     }
 
+    /**
+     * Check if the king is in checkmate.
+     * @param kingField The field of the king. If null, it will search for the king's field.
+     * @return size of possible mates.
+     */
     public int isMate(Field kingField) {
         if (kingField == null) {
-            for (Field field : chessBoard.Fields) {
+            for (Field field : chessBoard.getFields()) {
                 if (field.figure == null) {
                     continue;
                 }
@@ -75,7 +83,7 @@ public class CheckmateHandler {
         possibleCaptureSources.clear();
         List<Field> possibleCaptures = new ArrayList<>();
         List<Field> possibleMates = getPossiblesMates(null);
-        for (Field field : chessBoard.Fields) {
+        for (Field field : chessBoard.getFields()) {
             if (field.figure == null) {
                 continue;
             }
@@ -108,7 +116,7 @@ public class CheckmateHandler {
         ChessFigure originalFigure;
         boolean isOutOfCheck;
 
-        for (Field field : chessBoard.Fields) {
+        for (Field field : chessBoard.getFields()) {
             if (field.figure == null) {
                 continue;
             }
@@ -148,7 +156,7 @@ public class CheckmateHandler {
         Field kingField = null;
         boolean isOutOfCheck;
 
-        for (Field field : chessBoard.Fields) {
+        for (Field field : chessBoard.getFields()) {
             if (field.figure == null) {
                 continue;
             }

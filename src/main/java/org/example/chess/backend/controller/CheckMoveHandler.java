@@ -7,21 +7,19 @@ import org.example.chess.backend.enums.FigureColor;
 import org.example.chess.backend.util.LegalMovesInCheckHelper;
 import org.example.chess.backend.util.LegalMovesOutOfCheckHelper;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class CheckMoveHandler {
+public class CheckMoveHandler implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final ChessBoard chessBoard;
     private final FigureColor currentTurn;
-    private final List<Field> possibleCaptureSources;
-    private final List<Field> possibleBlockSources;
 
     public final CheckmateHandler checkmateHandler;
 
-    public CheckMoveHandler(ChessBoard chessBoard, FigureColor currentTurn, List<Field> possibleCaptureSources, List<Field> possibleBlockSources) {
+    public CheckMoveHandler(ChessBoard chessBoard, FigureColor currentTurn) {
         this.chessBoard = chessBoard;
         this.currentTurn = currentTurn;
-        this.possibleCaptureSources = possibleCaptureSources;
-        this.possibleBlockSources = possibleBlockSources;
 
         this.checkmateHandler = new CheckmateHandler(chessBoard, currentTurn);
     }
@@ -38,7 +36,7 @@ public class CheckMoveHandler {
             List<Field> captures = checkmateHandler.canCapture();
             List<Field> blocks = checkmateHandler.canBlock();
 
-            figureFields = LegalMovesInCheckHelper.resolveLegalMoves(figureFields, captures, blocks, escapes, figure, possibleCaptureSources, possibleBlockSources);
+            figureFields = LegalMovesInCheckHelper.resolveLegalMoves(figureFields, captures, blocks, escapes, figure, checkmateHandler.getPossibleCaptureSources(), checkmateHandler.getPossibleBlockSources());
         }
 
         figureFields = LegalMovesOutOfCheckHelper.filterMovesPreventingCheckmate(chessBoard, checkmateHandler, figureFields, figure);

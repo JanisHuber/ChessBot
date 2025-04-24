@@ -29,95 +29,60 @@ public class LegalMovesInCheckHelper {
      * @return A filtered list of legal moves that resolve the check, or {@code null} if the figure cannot assist.
      */
     public static List<Field> resolveLegalMoves(List<Field> figureFields, List<Field> captures, List<Field> blocks, List<Field> escapes, ChessFigure figure, List<Field> possibleCaptureSources, List<Field> possibleBlockSources) {
+        List<Field> sourceList;
+        boolean isKing = figure.getClassName().equals(KING_CLASS_NAME);
+
+        sourceList = (isKing) ? handleKingMoves(figureFields, escapes, captures) : handleMoves(figureFields, captures, blocks, figure, possibleCaptureSources, possibleBlockSources);
+
+        return sourceList;
+    }
+
+    private static List<Field> handleMoves(List<Field> figureFields, List<Field> captures, List<Field> blocks, ChessFigure figure, List<Field> possibleCaptureSources, List<Field> possibleBlockSources) {
         boolean canCapture = !captures.isEmpty();
         boolean canBlock = !blocks.isEmpty();
-        boolean canEscape = !escapes.isEmpty();
 
         List<String> possibleCaptureSourcesString = turnFieldsToFigureNames(possibleCaptureSources);
         List<String> possibleBlockSourcesString = turnFieldsToFigureNames(possibleBlockSources);
 
-        List<Field> sourceList = figureFields;
-
-        if (!canCapture && !canBlock && !canEscape) {
+        if (!canCapture && !canBlock) {
             return null;
         }
-
-        if (canEscape && !canBlock && !canCapture) {
-            if (figure.getClassName().equals(KING_CLASS_NAME))
-            {
-                sourceList.retainAll(escapes);
-            } else {
-                return null;
-            }
-        }
-
-        if (!canEscape && canBlock && !canCapture) {
-            if (possibleBlockSourcesString.contains(figure.getClassName()) && !Objects.equals(figure.getClassName(), KING_CLASS_NAME))
-            {
-                //Is bug fixed?
-                System.out.println(figure.getClassName());
-                sourceList.retainAll(blocks);
-            } else {
-                return null;
-            }
-        }
-
-        if (!canEscape && !canBlock && canCapture) {
-            if (possibleCaptureSourcesString.contains(figure.getClassName()))
-            {
-                sourceList.retainAll(captures);
-            } else {
-                return null;
-            }
-        }
-
-        if (!canEscape && canBlock && canCapture) {
-            if (possibleBlockSourcesString.contains(figure.getClassName()) || possibleCaptureSourcesString.contains(figure.getClassName()))
-            {
-                retainTwoLists(sourceList, blocks, captures);
-            } else {
-                return null;
-            }
-        }
-
-        if (canEscape && !canBlock && canCapture) {
-            if (possibleCaptureSourcesString.contains(figure.getClassName()) || figure.getClassName().equals(KING_CLASS_NAME))
-            {
-                if (figure.getClassName().equals(KING_CLASS_NAME)) {
-                    sourceList.retainAll(escapes);
+        if (canCapture) {
+            if (canBlock) {
+                if (possibleBlockSourcesString.contains(figure.getClassName()) || possibleCaptureSourcesString.contains(figure.getClassName())) {
+                    return retainTwoLists(figureFields, blocks, captures);
                 } else {
-                    sourceList.retainAll(captures);
+                    return null;
                 }
+            }
+            if (possibleCaptureSourcesString.contains(figure.getClassName())) {
+                figureFields.retainAll(captures);
+            } else {
+                return null;
+            }
+        } else if (canBlock) {
+            if (possibleBlockSourcesString.contains(figure.getClassName())) {
+                figureFields.retainAll(blocks);
             } else {
                 return null;
             }
         }
+        return figureFields;
+    }
 
-        if (canEscape && canBlock && canCapture) {
-            if (possibleBlockSourcesString.contains(figure.getClassName()) || possibleCaptureSourcesString.contains(figure.getClassName()) || figure.getClassName().equals(KING_CLASS_NAME))
-            {
-                if (figure.getClassName().equals(KING_CLASS_NAME)) {
-                    sourceList.retainAll(escapes);
-                } else {
-                    sourceList = retainTwoLists(sourceList, blocks, captures);
-                }
-            } else {
-                return null;
-            }
-        }
+    private static List<Field> handleKingMoves(List<Field> figureFields, List<Field> escapes, List<Field> captures) {
+        boolean canCapture = !captures.isEmpty();
+        boolean canEscape = !escapes.isEmpty();
 
-        if (canEscape && canBlock && !canCapture) {
-            if (possibleBlockSourcesString.contains(figure.getClassName()) || figure.getClassName().equals(KING_CLASS_NAME)) {
-                if (figure.getClassName().equals(KING_CLASS_NAME)) {
-                    sourceList.retainAll(escapes);
-                } else {
-                    sourceList.retainAll(blocks);
-                }
-            } else {
-                return null;
-            }
+        if (!canCapture && !canEscape) {
+            return null;
         }
-        return sourceList;
+        if (canEscape && canCapture) {
+            return retainTwoLists(figureFields, captures, escapes);
+        } else if (canEscape) {
+            figureFields.retainAll(escapes);
+        }
+        return figureFields;
     }
 
     /**

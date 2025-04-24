@@ -10,6 +10,7 @@ import org.example.chess.backend.util.Move;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ChessController implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -46,6 +47,19 @@ public class ChessController implements Serializable {
         chessBoard = BoardInitializerUtil.Initialize(new ChessBoard());
     }
 
+    public boolean checkForCheckmate() {
+        checkMoveHandler = new CheckMoveHandler(chessBoard, currentTurn);
+        for (Field field : chessBoard.getFields()) {
+            if (field.figure != null && field.figure.figureColor == currentTurn) {
+                List<Field> checkedMove = checkMoveHandler.getCheckedMove(field.figure);
+                if (checkedMove != null &&!checkedMove.isEmpty()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public boolean getBotMove() {
         if (publicAgainstAI && currentTurn == FigureColor.WHITE) {
             Move botMove = bot.getBestMove(this);
@@ -55,22 +69,27 @@ public class ChessController implements Serializable {
         return false;
     }
 
-    public boolean Move(Field currentField, Field target)
+    public Optional<Boolean> Move(Field currentField, Field target)
     {
         List<Field> fields = getCheckedMove(currentField.figure);
         if (fields == null) {
-            return false;
+            System.out.println("Checkmate");
+            return Optional.empty();
         }
         if (!fields.contains(target)) {
-            return false;
+            return Optional.of(false);
         } else {
             applyMove(currentField, target);
-            return true;
+            return Optional.of(true);
         }
     }
 
+    public CheckMoveHandler getCheckMoveHandler() {
+        return new CheckMoveHandler(chessBoard, currentTurn);
+    }
+
     public List<Field> getCheckedMove(ChessFigure figure) {
-        checkMoveHandler = new CheckMoveHandler(chessBoard, currentTurn, possibleCaptureSources, possibleBlockSources);
+        checkMoveHandler = new CheckMoveHandler(chessBoard, currentTurn);
 
         return checkMoveHandler.getCheckedMove(figure);
     }

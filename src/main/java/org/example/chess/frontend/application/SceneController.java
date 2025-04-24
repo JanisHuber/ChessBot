@@ -12,12 +12,15 @@ import org.example.chess.backend.controller.ChessController;
 import org.example.chess.backend.board.Field;
 
 import java.util.List;
+import java.util.Optional;
 
 public class SceneController {
     @FXML
     private AnchorPane anchorPane;
 
     ChessController chessController = new ChessController(true);
+    private boolean gameOver = false;
+    private String msg;
 
     @FXML
     public void initialize() {
@@ -28,6 +31,10 @@ public class SceneController {
 
     @FXML
     public void updateChessBoard(List<Field> markedFields) {
+        if (gameOver) {
+            showGameOver(msg);
+            return;
+        }
         anchorPane.getChildren().clear();
 
         setBackgroundTiles();
@@ -70,7 +77,7 @@ public class SceneController {
                 imageView.addEventHandler(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                        boolean hasMoved = false;
+                        Optional<Boolean> hasMoved;
                         updateChessBoard(null);
                         double x = (event.getSceneX() / 50);
                         double y = (event.getSceneY() / 50);
@@ -78,16 +85,26 @@ public class SceneController {
                         if (targetField != null) {
                             if (targetField != field) {
                                 hasMoved = chessController.Move(field, targetField);
-                                if (hasMoved) {
-                                    updateChessBoard(null);
-                                    Platform.runLater(() -> {
-                                        boolean hasBotMoved = chessController.getBotMove();
-                                        if (hasBotMoved) {
-                                            updateChessBoard(null);
-                                        }
-                                    });
+                                if (hasMoved.isPresent()) {
+                                    if (hasMoved.get()) {
+                                        updateChessBoard(null);
+                                        Platform.runLater(() -> {
+                                            boolean hasBotMoved = chessController.getBotMove();
+                                            if (hasBotMoved) {
+                                                updateChessBoard(null);
+                                                if (chessController.checkForCheckmate()) {
+                                                    gameOver = true;
+                                                    msg = "Du hast verloren!";
+                                                } else {
+                                                    updateChessBoard(null);
+                                                }
+                                            } else {
+                                                gameOver = true;
+                                                msg = "Du hast gewonnen!";
+                                            }
+                                        });
+                                    }
                                 }
-                                targetField = null;
                             }
                         }
                     }
@@ -133,4 +150,13 @@ public class SceneController {
             anchorPane.getChildren().add(rowLabel);
         }
     }
+
+    private void showGameOver(String message) {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+        alert.setTitle("Game Over");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
 }

@@ -1,30 +1,36 @@
 package org.example.chess.backend.evaluate;
 
 import org.example.chess.backend.board.Field;
+import org.example.chess.backend.bot.ChessBot;
 import org.example.chess.backend.controller.ChessController;
 import org.example.chess.backend.enums.FigureColor;
 import org.example.chess.backend.figures.Pawn;
+import org.example.chess.backend.util.LoggingToFile;
+import org.example.chess.backend.util.Move;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 public class evaluateBoard {
-    public static int evaluateBoard(ChessController controller) {
-        int pawnStructureValue = 0;
-        int kingSafetyValue = 0;
-        int possibleAttackValue = 0;
-        int possibleDefenseValue = 0;
-        int possibleCheckValue = 0;
-
+    public static int evaluateBoard(ChessController controller, Logger logger) {
         int pieceValue = getPieceValue(controller);
-        int positionValue = new evaluateBoard().getPawnPositionValue(controller);
-        int mobilityValue = new evaluateBoard().getMobilityValue(controller);
+        int positionValue = getPawnPositionValue(controller);
+        int mobilityValue = getMobilityValue(controller);
+        int checkmateValue = checkmateValue(controller);
 
+        logger.info("Estimated Board with Values:");
+        logger.info("Piece Value: " + pieceValue);
+        logger.info("Position Value: " + positionValue);
+        logger.info("Mobility Value: " + mobilityValue);
 
-        int overallValue = pieceValue + positionValue + mobilityValue + pawnStructureValue + kingSafetyValue + possibleAttackValue + possibleDefenseValue + possibleCheckValue;
-        return overallValue;
+        return
+                checkmateValue * 5 +
+                pieceValue * 3 +
+                mobilityValue * 2 +
+                positionValue * 3;
     }
 
-    private int getMobilityValue(ChessController chessController) {
+    private static int getMobilityValue(ChessController chessController) {
         int value = 0;
         for (Field field : chessController.chessBoard.getFields()) {
             if (field.figure != null) {
@@ -81,7 +87,7 @@ public class evaluateBoard {
         return value;
     }
 
-    private int getPawnPositionValue(ChessController chessController) {
+    private static int getPawnPositionValue(ChessController chessController) {
         int value = 0;
         int[][] centralFields = { {4, 4}, {4, 5}, {5, 4}, {5, 5} };
 
@@ -103,11 +109,11 @@ public class evaluateBoard {
         return value / 5;
     }
 
-    private int convertRowToInt(String row) {
+    private static int convertRowToInt(String row) {
         return row.charAt(0) - 'A' + 1;
     }
 
-    private boolean isCentralField(int row, int col, int[][] centralFields) {
+    private static boolean isCentralField(int row, int col, int[][] centralFields) {
         for (int[] centralField : centralFields) {
             if (centralField[0] == row && centralField[1] == col) {
                 return true;
@@ -116,7 +122,7 @@ public class evaluateBoard {
         return false;
     }
 
-    private boolean isPawnProtected(Field field, ChessController chessController) {
+    private static boolean isPawnProtected(Field field, ChessController chessController) {
         for (Field currentField : chessController.chessBoard.getFields()) {
             if (currentField == field) {
                 continue;
@@ -133,13 +139,16 @@ public class evaluateBoard {
         return false;
     }
 
-    private int checkmateValue(ChessController chessController) {
+    private static int checkmateValue(ChessController chessController) {
         int counterWhite = 0;
         int counterBlack = 0;
 
         for (Field field : chessController.chessBoard.getFields()) {
             if (field.figure != null) {
-                if (!chessController.checkMoveHandler.getCheckedMove(field.figure).isEmpty()) {
+                if (chessController.getCheckMoveHandler().getCheckedMove(field.figure) == null) {
+                    break;
+                }
+                if (!chessController.getCheckMoveHandler().getCheckedMove(field.figure).isEmpty()) {
                     if (field.figure.figureColor == FigureColor.WHITE) {
                         counterWhite++;
                     } else {
@@ -151,8 +160,10 @@ public class evaluateBoard {
         if (counterWhite == 0 && counterBlack == 0) {
             return 0;
         } else if (counterWhite == 0) {
+            System.out.println("White checkmate detected");
             return -100000;
         } else if (counterBlack == 0) {
+            System.out.println("Black checkmate detected");
             return 100000;
         }
         return 0;

@@ -15,7 +15,7 @@ public class Pawn extends ChessFigure implements Serializable {
         List<Field> possibleMoves = new ArrayList<>();
         possibleMoves.clear();
 
-        for (Field field : this.chessBoard.Fields) {
+        for (Field field : this.chessBoard.getFields()) {
             if (this.figureColor == FigureColor.WHITE) {
 
                 if (field.row.equals(this.position.row) && field.column == (this.position.column + 1)) {
