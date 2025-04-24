@@ -8,7 +8,6 @@ import org.example.chess.backend.util.ChessFigure;
 import org.example.chess.backend.util.Move;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,9 +16,6 @@ public class ChessController implements Serializable {
 
     public ChessBoard chessBoard;
     public FigureColor currentTurn = FigureColor.WHITE;
-
-    private List<Field> possibleCaptureSources;
-    private List<Field> possibleBlockSources;
 
     private final boolean publicAgainstAI;
     private transient ChessBot bot;
@@ -37,28 +33,44 @@ public class ChessController implements Serializable {
     }
 
     private void init() {
-        this.possibleCaptureSources = new ArrayList<>();
-        this.possibleBlockSources = new ArrayList<>();
-
         if (publicAgainstAI) {
-            bot = new ChessBot(3);
+            bot = new ChessBot(3, 0);
         }
-
         chessBoard = BoardInitializerUtil.Initialize(new ChessBoard());
     }
 
-    public boolean checkForCheckmate() {
+    private boolean hasNoLegalMoves() {
         checkMoveHandler = new CheckMoveHandler(chessBoard, currentTurn);
         for (Field field : chessBoard.getFields()) {
             if (field.figure != null && field.figure.figureColor == currentTurn) {
                 List<Field> checkedMove = checkMoveHandler.getCheckedMove(field.figure);
-                if (checkedMove != null &&!checkedMove.isEmpty()) {
+                if (checkedMove != null && !checkedMove.isEmpty()) {
                     return false;
                 }
             }
         }
         return true;
     }
+
+    /**
+     * Check if the game is in stalemate or checkmate.
+     * @return Optional<Boolean> - true if stalemate, false if checkmate, empty if game is still ongoing.
+     */
+    public Optional<Boolean> getStalemateStatus() {
+        checkMoveHandler = new CheckMoveHandler(chessBoard, currentTurn);
+        boolean hasNoLegalMoves = hasNoLegalMoves();
+
+        if (!hasNoLegalMoves) {
+            return Optional.empty();
+        }
+
+        if (checkMoveHandler.checkmateHandler.isMate(null) > 0) {
+            return Optional.of(false);
+        }
+
+        return Optional.of(true);
+    }
+
 
     public boolean getBotMove() {
         if (publicAgainstAI && currentTurn == FigureColor.WHITE) {

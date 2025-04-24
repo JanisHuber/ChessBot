@@ -18,9 +18,9 @@ public class ChessBot {
     private final int maxQuiescenceSearchDepth;
     private final Logger logger = LoggingToFile.getLogger(ChessBot.class.getName());
 
-    public ChessBot(int depth) {
+    public ChessBot(int depth, int maxQuiescenceSearchDepth) {
         this.depth = depth;
-        this.maxQuiescenceSearchDepth = depth;
+        this.maxQuiescenceSearchDepth = maxQuiescenceSearchDepth;
     }
 
     public Move getBestMove(ChessController controller) {
@@ -56,8 +56,11 @@ public class ChessBot {
 
     private int alphaBeta(ChessController controller, int depth, int alpha, int beta, boolean isMaximizingPlayer) {
         if (depth == 0) {
-            return evaluateBoard.evaluateBoard(controller, logger);
-            //return quiescenceSearch(controller, alpha, beta, isMaximizingPlayer, maxQuiescenceSearchDepth);
+            if (maxQuiescenceSearchDepth > 0) {
+                return quiescenceSearch(controller, alpha, beta, isMaximizingPlayer, maxQuiescenceSearchDepth);
+            } else {
+                return evaluateBoard.evaluateBoard(controller, logger);
+            }
         }
 
         List<Move> possibleMoves = sortMoves(getPossibleMoves(controller), controller.chessBoard);
@@ -150,7 +153,6 @@ public class ChessBot {
      * @return score of the best evaluation
      */
     private int quiescenceSearch(ChessController controller, int alpha, int beta, boolean isMaximizingPlayer, int depth) {
-        System.out.println("Quiescence search depth: " + depth);
         if (depth == 0) {
             return evaluateBoard.evaluateBoard(controller, logger);
         }
@@ -191,7 +193,7 @@ public class ChessBot {
 
         for (Move move : allMoves) {
             Field target = move.getTarget(controller.chessBoard);
-            if (target.figure != null && target.figure.figureColor != controller.currentTurn) {
+            if (target.figure != null && target.figure.figureColor != controller.currentTurn && target.figure.value > 1) {
                 noisyMoves.add(move);
             } else if (moveResultsInCheck(controller, move)) {
                 noisyMoves.add(move);

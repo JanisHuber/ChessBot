@@ -4,7 +4,6 @@ import org.example.chess.backend.board.Field;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class LegalMovesInCheckHelper {
 
@@ -37,6 +36,22 @@ public class LegalMovesInCheckHelper {
         return sourceList;
     }
 
+    /**
+     * Handles the moves for non-king figures.
+     * <p>
+     * This method determines whether a given figure can capture or block an attacking piece.
+     * Only moves that contribute to resolving the check are retained.
+     * </p>
+     *
+     * @param figureFields The list of possible fields the figure can move to.
+     * @param captures The list of fields where an attacking piece can be captured.
+     * @param blocks The list of fields that could block the check.
+     * @param figure The figure for which to filter legal moves.
+     * @param possibleCaptureSources A list of own figures that are allowed to capture.
+     * @param possibleBlockSources A list of own figures that are allowed to block.
+     *
+     * @return A filtered list of legal moves that resolve the check, or {@code null} if the figure cannot assist.
+     */
     private static List<Field> handleMoves(List<Field> figureFields, List<Field> captures, List<Field> blocks, ChessFigure figure, List<Field> possibleCaptureSources, List<Field> possibleBlockSources) {
         boolean canCapture = !captures.isEmpty();
         boolean canBlock = !blocks.isEmpty();
@@ -70,6 +85,19 @@ public class LegalMovesInCheckHelper {
         return figureFields;
     }
 
+    /**
+     * Handles the moves for the king figure.
+     * <p>
+     * This method determines whether the king can escape or capture an attacking piece.
+     * Only moves that contribute to resolving the check are retained.
+     * </p>
+     *
+     * @param figureFields The list of possible fields the king can move to.
+     * @param escapes The list of safe fields the king can escape to.
+     * @param captures The list of fields where an attacking piece can be captured.
+     *
+     * @return A filtered list of legal moves that resolve the check, or {@code null} if the king cannot assist.
+     */
     private static List<Field> handleKingMoves(List<Field> figureFields, List<Field> escapes, List<Field> captures) {
         boolean canCapture = !captures.isEmpty();
         boolean canEscape = !escapes.isEmpty();

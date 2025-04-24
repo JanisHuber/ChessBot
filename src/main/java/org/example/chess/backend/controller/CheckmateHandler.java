@@ -31,6 +31,11 @@ public class CheckmateHandler implements Serializable {
         return possibleBlockSources;
     }
 
+    /**
+     * Get all possible mates against the king of the currentTurn.
+     * @param kingField The field of the king. If null, it will search for the king's field.
+     * @return List of possible mates.
+     */
     private List<Field> getPossiblesMates(Field kingField) {
         List<Field> possibleMates = new ArrayList<>();
         List<Field> currentCheckingFields = new ArrayList<>();
@@ -79,6 +84,11 @@ public class CheckmateHandler implements Serializable {
         return possibleMates.size();
     }
 
+    /**
+     * Checks for possible captures to escape mate.
+     * @return List of possible capturesTargetFields
+     * @saves the @possibleCaptureSources
+     */
     public List<Field> canCapture() {
         possibleCaptureSources.clear();
         List<Field> possibleCaptures = new ArrayList<>();
@@ -110,6 +120,11 @@ public class CheckmateHandler implements Serializable {
         return possibleCaptures;
     }
 
+    /**
+     * Checks for possible blocks to escape mate.
+     * @return List of possible blocksTargetFields
+     * @saves: the possibleBlockSources
+     */
     public List<Field> canBlock() {
         possibleBlockSources.clear();
         List<Field> blocks = new ArrayList<>();
@@ -150,6 +165,10 @@ public class CheckmateHandler implements Serializable {
         return blocks;
     }
 
+    /**
+     * Checks for possible escapes to escape mate.
+     * @return List of possible escapesTargetFields
+     */
     public List<Field> canEscape() {
         List<Field> possibleEscapes;
         List<Field> escapes = new ArrayList<>();

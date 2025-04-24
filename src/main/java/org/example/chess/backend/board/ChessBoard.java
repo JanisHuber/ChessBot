@@ -2,22 +2,23 @@ package org.example.chess.backend.board;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ChessBoard implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private List<Field> Fields;
+    private List<Field> fields;
 
     public List<Field> getFields() {
-        return Fields;
+        return fields;
     }
 
     public void setFields(List<Field> fields) {
-        Fields = fields;
+        this.fields = fields;
     }
 
     public Field getField(String row, int column) {
-        for (Field field : Fields) {
+        for (Field field : fields) {
             if (field.row.equals(row) && field.column == column) {
                 return field;
             }
@@ -41,5 +42,9 @@ public class ChessBoard implements Serializable {
         target.figure = source.figure;
         source.figure = null;
     }
-
+    public void forEachField(Consumer<Field> action) {
+        for (Field field : fields) {
+            action.accept(field);
+        }
+    }
 }

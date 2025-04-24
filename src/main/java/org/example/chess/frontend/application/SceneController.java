@@ -77,36 +77,7 @@ public class SceneController {
                 imageView.addEventHandler(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                        Optional<Boolean> hasMoved;
-                        updateChessBoard(null);
-                        double x = (event.getSceneX() / 50);
-                        double y = (event.getSceneY() / 50);
-                        Field targetField = chessController.chessBoard.getField(Character.toString((char) (64 + (int) x)), (int) y);
-                        if (targetField != null) {
-                            if (targetField != field) {
-                                hasMoved = chessController.Move(field, targetField);
-                                if (hasMoved.isPresent()) {
-                                    if (hasMoved.get()) {
-                                        updateChessBoard(null);
-                                        Platform.runLater(() -> {
-                                            boolean hasBotMoved = chessController.getBotMove();
-                                            if (hasBotMoved) {
-                                                updateChessBoard(null);
-                                                if (chessController.checkForCheckmate()) {
-                                                    gameOver = true;
-                                                    msg = "Du hast verloren!";
-                                                } else {
-                                                    updateChessBoard(null);
-                                                }
-                                            } else {
-                                                gameOver = true;
-                                                msg = "Du hast gewonnen!";
-                                            }
-                                        });
-                                    }
-                                }
-                            }
-                        }
+                        applyPlayerMove(event, field);
                     }
                 });
 
@@ -115,6 +86,52 @@ public class SceneController {
                 }
                 anchorPane.getChildren().add(imageView);
             }
+        }
+    }
+
+    private void applyPlayerMove(MouseEvent event, Field field) {
+        Optional<Boolean> hasMoved;
+        updateChessBoard(null);
+        double x = (event.getSceneX() / 50);
+        double y = (event.getSceneY() / 50);
+        Field targetField = chessController.chessBoard.getField(Character.toString((char) (64 + (int) x)), (int) y);
+        if (targetField != null) {
+            if (targetField != field) {
+                hasMoved = chessController.Move(field, targetField);
+                if (hasMoved.isEmpty()) {
+                    chessController.getStalemateStatus().ifPresentOrElse(
+                            stalemate -> {
+                                gameOver = true;
+                                msg = stalemate ? "Unentschieden!" : "Du hast gewonnen!";
+                                showGameOver(msg);
+                            },
+                            () -> {}
+                    );
+                } else if (hasMoved.get()) {
+                    updateChessBoard(null);
+                    Platform.runLater(this::applyBotMove);
+                }
+            }
+        }
+    }
+
+    private void applyBotMove() {
+        boolean hasBotMoved = chessController.getBotMove();
+        if (hasBotMoved) {
+            updateChessBoard(null);
+            chessController.getStalemateStatus().ifPresentOrElse(stalemate -> {
+                if (stalemate) {
+                    gameOver = true;
+                    msg = "Unentschieden!";
+                } else {
+                    gameOver = true;
+                    msg = "Du hast verloren!";
+                    updateChessBoard(null);
+                }
+            }, () -> {});
+        } else {
+            gameOver = true;
+            msg = "Du hast gewonnen!";
         }
     }
 
