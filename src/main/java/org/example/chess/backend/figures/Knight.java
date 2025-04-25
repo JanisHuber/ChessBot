@@ -14,56 +14,23 @@ public class Knight extends ChessFigure implements Serializable {
     public int value = 3;
 
     public List<Field> getPossibleMoves() {
-        possibleMoves.clear();
+                    possibleMoves.clear();
+                    int[][] moves = {
+                        {2, 1}, {1, 2}, {-1, 2}, {-2, 1},
+                        {-2, -1}, {-1, -2}, {1, -2}, {2, -1}
+                    };
 
-        if (this.position.column + 1 <= 8 && this.position.getRowInt() + 2 <= 8) {
-            Field field = chessBoard.getField(Character.toString((char) (this.position.getRowInt() + 2 + 64)), this.position.column + 1);
-            if (field.figure == null || field.figure.figureColor != this.figureColor) {
-                possibleMoves.add(field);
-            }
-        }
-        if (this.position.column + 2 <= 8 && this.position.getRowInt() + 1 <= 8) {
-            Field field = chessBoard.getField(Character.toString((char) (this.position.getRowInt() + 1 + 64)), this.position.column + 2);
-            if (field.figure == null || field.figure.figureColor != this.figureColor) {
-                possibleMoves.add(field);
-            }
-        }
-        if (this.position.column + 2 <= 8 && this.position.getRowInt() - 1 >= 1) {
-            Field field = chessBoard.getField(Character.toString((char) (this.position.getRowInt() - 1 + 64)), this.position.column + 2);
-            if (field.figure == null || field.figure.figureColor != this.figureColor) {
-                possibleMoves.add(field);
-            }
-        }
-        if (this.position.column + 1 <= 8 && this.position.getRowInt() - 2 >= 1) {
-            Field field = chessBoard.getField(Character.toString((char) (this.position.getRowInt() - 2 + 64)), this.position.column + 1);
-            if (field.figure == null || field.figure.figureColor != this.figureColor) {
-                possibleMoves.add(field);
-            }
-        }
-        if (this.position.column - 1 >= 1 && this.position.getRowInt() - 2 >= 1) {
-            Field field = chessBoard.getField(Character.toString((char) (this.position.getRowInt() - 2 + 64)), this.position.column - 1);
-            if (field.figure == null || field.figure.figureColor != this.figureColor) {
-                possibleMoves.add(field);
-            }
-        }
-        if (this.position.column - 2 >= 1 && this.position.getRowInt() - 1 >= 1) {
-            Field field = chessBoard.getField(Character.toString((char) (this.position.getRowInt() - 1 + 64)), this.position.column - 2);
-            if (field.figure == null || field.figure.figureColor != this.figureColor) {
-                possibleMoves.add(field);
-            }
-        }
-        if (this.position.column - 2 >= 1 && this.position.getRowInt() + 1 <= 8) {
-            Field field = chessBoard.getField(Character.toString((char) (this.position.getRowInt() + 1 + 64)), this.position.column - 2);
-            if (field.figure == null || field.figure.figureColor != this.figureColor) {
-                possibleMoves.add(field);
-            }
-        }
-        if (this.position.column - 1 >= 1 && this.position.getRowInt() + 2 <= 8) {
-            Field field = chessBoard.getField(Character.toString((char) (this.position.getRowInt() + 2 + 64)), this.position.column - 1);
-            if (field.figure == null || field.figure.figureColor != this.figureColor) {
-                possibleMoves.add(field);
-            }
-        }
-        return possibleMoves;
-    }
+                    for (int[] move : moves) {
+                        int newRow = this.position.getRowInt() + move[0];
+                        int newCol = this.position.column + move[1];
+
+                        if (newRow >= 1 && newRow <= 8 && newCol >= 1 && newCol <= 8) {
+                            Field field = chessBoard.getField(Character.toString((char) (newRow + 64)), newCol);
+                            if (field.figure == null || field.figure.figureColor != this.figureColor) {
+                                possibleMoves.add(field);
+                            }
+                        }
+                    }
+                    return possibleMoves;
+                }
 }

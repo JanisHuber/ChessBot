@@ -15,68 +15,22 @@ public class King extends ChessFigure implements Serializable {
 
     public List<Field> getPossibleMoves() {
         possibleMoves.clear();
+        int[][] directions = {
+                {0, 1}, {1, 1}, {1, 0}, {1, -1},
+                {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}
+        };
 
-        if (this.position.column + 1 <= 8 && this.position.getRowInt() <= 8) {
-            Field field = chessBoard.getField(Character.toString((char) (this.position.getRowInt() + 64)), this.position.column + 1);
-            if (field.figure == null || field.figure.figureColor != this.figureColor) {
-                possibleMoves.add(field);
-            }
-        }
-        if (this.position.column + 1 <= 8 && this.position.getRowInt() + 1 <= 8) {
-            Field field = chessBoard.getField(Character.toString((char) (this.position.getRowInt() + 1 + 64)), this.position.column + 1);
-            if (field.figure == null || field.figure.figureColor != this.figureColor) {
-                possibleMoves.add(field);
-            }
-        }
-        if (this.position.column <= 8 && this.position.getRowInt() + 1 <= 8) {
-            Field field = chessBoard.getField(Character.toString((char) (this.position.getRowInt() + 1 + 64)), this.position.column);
-            if (field.figure == null || field.figure.figureColor != this.figureColor) {
-                possibleMoves.add(field);
-            }
-        }
-        if (this.position.column - 1 >= 1 && this.position.getRowInt() + 1 <= 8) {
-            Field field = chessBoard.getField(Character.toString((char) (this.position.getRowInt() + 1 + 64)), this.position.column - 1);
-            if (field.figure == null || field.figure.figureColor != this.figureColor) {
-                possibleMoves.add(field);
-            }
-        }
-        if (this.position.column - 1 >= 1 && this.position.getRowInt() <= 8) {
-            Field field = chessBoard.getField(Character.toString((char) (this.position.getRowInt() + 64)), this.position.column - 1);
-            if (field.figure == null || field.figure.figureColor != this.figureColor) {
-                possibleMoves.add(field);
-            }
-        }
-        if (this.position.column - 1 >= 1 && this.position.getRowInt() - 1 >= 1) {
-            Field field = chessBoard.getField(Character.toString((char) (this.position.getRowInt() - 1 + 64)), this.position.column - 1);
-            if (field.figure == null || field.figure.figureColor != this.figureColor) {
-                possibleMoves.add(field);
-            }
-        }
-        if (this.position.column <= 8 && this.position.getRowInt() - 1 >= 1) {
-            Field field = chessBoard.getField(Character.toString((char) (this.position.getRowInt() - 1 + 64)), this.position.column);
-            if (field.figure == null || field.figure.figureColor != this.figureColor) {
-                possibleMoves.add(field);
-            }
-        }
-        if (this.position.column + 1 <= 8 && this.position.getRowInt() - 1 >= 1) {
-            Field field = chessBoard.getField(Character.toString((char) (this.position.getRowInt() - 1 + 64)), this.position.column + 1);
-            if (field.figure == null || field.figure.figureColor != this.figureColor) {
-                possibleMoves.add(field);
-            }
-        }
+        for (int[] direction : directions) {
+            int newRow = this.position.getRowInt() + direction[0];
+            int newCol = this.position.column + direction[1];
 
-        // Castling
-
-        /*if (!hasMoved) Too complicated, verify moves in chessController
-        {
-            Field field = chessBoard.getField(Character.toString((char) (this.position.getRowInt() + 64)), this.position.column + 2);
-            Field field2 = chessBoard.getField(Character.toString((char) (this.position.getRowInt() + 64)), this.position.column + 1);
-            if (field.figure == null && field2.figure == null)
-            {
-                possibleMoves.add(field);
+            if (newRow >= 1 && newRow <= 8 && newCol >= 1 && newCol <= 8) {
+                Field field = chessBoard.getField(Character.toString((char) (newRow + 64)), newCol);
+                if (field.figure == null || field.figure.figureColor != this.figureColor) {
+                    possibleMoves.add(field);
+                }
             }
-        }*/
-
+        }
         return possibleMoves;
     }
 }

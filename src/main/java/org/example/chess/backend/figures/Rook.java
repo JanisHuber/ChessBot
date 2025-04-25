@@ -14,60 +14,32 @@ public class Rook extends ChessFigure implements Serializable {
     public int value = 5;
 
     public List<Field> getPossibleMoves() {
-        possibleMoves.clear();
-        if (this.position.column < 8) {
-            for (int i = this.position.column + 1; i <= 8; i++) {
-                Field field = chessBoard.getField(this.position.row, i);
-                if (field.figure == null) {
-                    possibleMoves.add(field);
-                } else if (field.figure.figureColor != this.figureColor) {
-                    possibleMoves.add(field);
-                    break;
-                } else {
-                    break;
+            possibleMoves.clear();
+            int[][] directions = {
+                {0, 1}, {0, -1}, {1, 0}, {-1, 0}
+            };
+
+            for (int[] direction : directions) {
+                int row = this.position.getRowInt();
+                int col = this.position.column;
+
+                while (true) {
+                    row += direction[0];
+                    col += direction[1];
+
+                    if (row < 1 || row > 8 || col < 1 || col > 8) break;
+
+                    Field field = chessBoard.getField(Character.toString((char) (row + 64)), col);
+                    if (field.figure == null) {
+                        possibleMoves.add(field);
+                    } else {
+                        if (field.figure.figureColor != this.figureColor) {
+                            possibleMoves.add(field);
+                        }
+                        break;
+                    }
                 }
             }
+            return possibleMoves;
         }
-        if (this.position.column > 1) {
-            for (int i = this.position.column - 1; i >= 1; i--) {
-                Field field = chessBoard.getField(this.position.row, i);
-                if (field.figure == null) {
-                    possibleMoves.add(field);
-                } else if (field.figure.figureColor != this.figureColor) {
-                    possibleMoves.add(field);
-                    break;
-                } else {
-                    break;
-                }
-            }
-        }
-        if ((char)(position.getRowInt() + 64) < 'H') {
-            for (int i = (char)(position.getRowInt() + 1); i <= 8; i++) {
-                Field field = chessBoard.getField(String.valueOf((char) (64 + i)), this.position.column);
-                if (field.figure == null) {
-                    possibleMoves.add(field);
-                } else if (field.figure.figureColor != this.figureColor) {
-                    possibleMoves.add(field);
-                    break;
-                } else {
-                    break;
-                }
-            }
-        }
-        //System.out.print((char)(position.getRowInt() + 64)); error + 64
-        if ((char)(position.getRowInt() + 64) > 'A') {
-            for (int i = (char)(position.getRowInt() - 1); i >= 1; i--) {
-                Field field = chessBoard.getField(String.valueOf((char)(64 + i)), this.position.column);
-                if (field.figure == null) {
-                    possibleMoves.add(field);
-                } else if (field.figure.figureColor != this.figureColor) {
-                    possibleMoves.add(field);
-                    break;
-                } else {
-                    break;
-                }
-            }
-        }
-        return possibleMoves;
-    }
 }

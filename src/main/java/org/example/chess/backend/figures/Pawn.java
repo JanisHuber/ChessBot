@@ -13,56 +13,26 @@ public class Pawn extends ChessFigure implements Serializable {
 
     public List<Field> getPossibleMoves() {
         List<Field> possibleMoves = new ArrayList<>();
-        possibleMoves.clear();
+        int direction = (this.figureColor == FigureColor.WHITE) ? 1 : -1;
+        int startRow = (this.figureColor == FigureColor.WHITE) ? 2 : 7;
 
         for (Field field : this.chessBoard.getFields()) {
-            if (this.figureColor == FigureColor.WHITE) {
-
-                if (field.row.equals(this.position.row) && field.column == (this.position.column + 1)) {
-                    if (field.figure == null) {
+            if (field.row.equals(this.position.row) && field.column == (this.position.column + direction)) {
+                if (field.figure == null) {
+                    possibleMoves.add(field);
+                }
+            }
+            if (field.row.equals(this.position.row) && field.column == (this.position.column + 2 * direction)) {
+                if (field.figure == null && this.position.column == startRow) {
+                    Field intermediateField = chessBoard.getField(this.position.row, this.position.column + direction);
+                    if (intermediateField.figure == null) {
                         possibleMoves.add(field);
                     }
                 }
-                if (field.row.equals(this.position.row) && field.column == (this.position.column + 2)) {
-                    if (field.figure == null && this.position.column == 2) {
-                        Field field1 = chessBoard.getField(this.position.row, this.position.column + 1);
-                        if (field1.figure == null) {
-                            possibleMoves.add(field);
-                        }
-                    }
-                }
-                if (field.row.equals(String.valueOf((char)(this.position.row.charAt(0) + 1))) && field.column == (this.position.column + 1)) {
-                    if (field.figure != null && field.figure.figureColor != this.figureColor) {
-                        possibleMoves.add(field);
-                    }
-                }
-                if (field.row.equals(String.valueOf((char)(this.position.row.charAt(0) - 1))) && field.column == (this.position.column + 1)) {
-                    if (field.figure != null && field.figure.figureColor != this.figureColor) {
-                        possibleMoves.add(field);
-                    }
-                }
-
-            } else if (this.figureColor == FigureColor.BLACK)
-            {
-                if (field.row.equals(this.position.row) && field.column == (this.position.column - 1)) {
-                    if (field.figure == null) {
-                        possibleMoves.add(field);
-                    }
-                }
-                if (field.row.equals(this.position.row) && field.column == (this.position.column - 2)) {
-                    if (field.figure == null && this.position.column == 7) {
-                        Field field1 = chessBoard.getField(this.position.row, this.position.column - 1);
-                        if (field1.figure == null) {
-                            possibleMoves.add(field);
-                        }
-                    }
-                }
-                if (field.row.equals(String.valueOf((char)(this.position.row.charAt(0) + 1))) && field.column == (this.position.column - 1)) {
-                    if (field.figure != null && field.figure.figureColor != this.figureColor) {
-                        possibleMoves.add(field);
-                    }
-                }
-                if (field.row.equals(String.valueOf((char)(this.position.row.charAt(0) - 1))) && field.column == (this.position.column - 1)) {
+            }
+            if (field.column == (this.position.column + direction)) {
+                if (field.row.equals(String.valueOf((char) (this.position.row.charAt(0) + 1))) ||
+                    field.row.equals(String.valueOf((char) (this.position.row.charAt(0) - 1)))) {
                     if (field.figure != null && field.figure.figureColor != this.figureColor) {
                         possibleMoves.add(field);
                     }
