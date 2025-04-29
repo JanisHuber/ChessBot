@@ -45,7 +45,7 @@ The project is structured into several main components:
 1. Ensure Java is installed (minimum version 8)
 2. Clone the repository:
 ```bash
-git clone [repository-url]
+git clone https://github.com/JanisHuber/ChessBot.git
 ```
 3. Navigate to the project directory:
 ```bash
