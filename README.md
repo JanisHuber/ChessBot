@@ -60,15 +60,6 @@ mvn clean install
 java -jar target/Chess.jar
 ```
 
-## Planned Features
-
-- Implementation of various AI difficulty levels
-- Save and load game states
-- Online multiplayer mode
-- Integration of chess opening libraries
-- Performance optimizations
-- Advanced game analytics
-
 ## Technical Requirements
 
 - Java 8 or higher
